@@ -59,11 +59,11 @@ class DigibarFile(SerialFile):
     def __init__(self, filename):
         super(DigibarFile, self).__init__(filename)
         #first 3 lines are a header
-        for i in range(3)
+        for i in range(3):
             self.file.readline()
 
     def __del__(self):
-        super(SV71File, self).__del__()
+        super(DigibarFile, self).__del__()
 
     def __iter__(self):
         return self
@@ -71,9 +71,21 @@ class DigibarFile(SerialFile):
     def next(self):
         if not self.file.closed:
             line_text = self.file.readline()
+            # print line_text.strip()
             parts = line_text.split(',')
             if len(parts) == 5:
-                pass
+                fulltime = ' '.join(parts[0:2])
+                localtime = time.strptime(fulltime, r'%m/%d/%y %H:%M:%S')
+                localtime
+                epochtime = time.mktime(time.strptime(fulltime, 
+                    r'%m/%d/%y %H:%M:%S'))
+                #set this to the timezone offset in the file
+                # epochtime += 3600 * 8
+                # print time.gmtime(epochtime)
+                try:
+                    return SVPInfo(float(epochtime), float(parts[2]))
+                except:
+                    raise StopIteration
             else:
                 self.file.close()
                 raise StopIteration

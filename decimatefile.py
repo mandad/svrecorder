@@ -2,7 +2,7 @@ import sys
 import sv_recorded_process
 import numpy as np
 
-_debug = True
+_debug = False
 
 def main():
     """Reads an SVP71 record file and outputs one mean value for each second
@@ -29,7 +29,7 @@ def main():
         else:
             if lastsec != 0:
                 if _debug:
-                    print ('Sec: %i, SV: %0.2f, Std: %0.2f' % (lastsec, 
+                    print ('Sec: %i, SV: %0.2f, Std: %0.2f\n' % (lastsec, 
                         np.mean(sv_vals), np.std(sv_vals)))
                 else:
                     writefile.write('{0:d},{1:0.2f},{2:0.2f}\n'.format(lastsec, 
@@ -39,7 +39,7 @@ def main():
             sv_vals = np.array([sv_record.sv_value])
         num_in += 1
         if _debug:
-            if i == 50:
+            if num_in == 10:
                 break
 
     #print last record
@@ -48,6 +48,7 @@ def main():
             np.mean(sv_vals), np.std(sv_vals)))
     writefile.write('{0:d},{1:0.2f},{2:0.2f}'.format(lastsec, 
         np.mean(sv_vals), np.std(sv_vals)))
+    num_out += 1
     writefile.close()
     print '%i Records Processed, %i Output' % (num_in, num_out)
 
