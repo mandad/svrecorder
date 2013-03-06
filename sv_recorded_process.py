@@ -51,7 +51,6 @@ class SV71File(SerialFile):
         else:
             raise StopIteration
 
-
 class DigibarFile(SerialFile):
     """Reads a file of raw strings from a digibar, uses same interface as SV71
     reader for compatibility.
@@ -76,12 +75,13 @@ class DigibarFile(SerialFile):
             if len(parts) == 5:
                 fulltime = ' '.join(parts[0:2])
                 localtime = time.strptime(fulltime, r'%m/%d/%y %H:%M:%S')
-                localtime
                 epochtime = time.mktime(time.strptime(fulltime, 
                     r'%m/%d/%y %H:%M:%S'))
+                #time set incorrectly
+                epochtime += 3600 * 10
                 #set this to the timezone offset in the file
                 # epochtime += 3600 * 8
-                # print time.gmtime(epochtime)
+                # print time.localtime(epochtime)
                 try:
                     return SVPInfo(float(epochtime), float(parts[2]))
                 except:
@@ -92,7 +92,7 @@ class DigibarFile(SerialFile):
         else:
             raise StopIteration
 
-class SVPInfo:
+class SVPInfo(object):
     """Class for storing SVP records, keeps track of time of the record and the
     sound speed value.
     """
