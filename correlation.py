@@ -7,8 +7,20 @@ import plotdata
 
 def show_hist(filename):
     data = np.load(filename)
-    plt.hist(data['diffs'], bins = 100, range=(-5,5))
+    plt.hist(data['diffs'], bins = 100, range=(-7,5))
     plt.xlabel('SV71 - Digibar (m/s)')
+    plt.title('Histogram of Differences Between SV71 and Digibar')
+    plt.show()
+
+def show_diff_timeseries(filename):
+    data = np.load(filename)
+    masked_diffs = np.ma.masked_outside(data['diffs'], -10, 10)
+    print 'Restricted to Range [-10,10]:\n=============================='
+    print 'Mean Diff: %0.4f\nStDev Diff: %0.4f' % (np.mean(masked_diffs),
+        np.std(masked_diffs))
+    plt.plot(data['times'], masked_diffs)
+    plt.ylim((-5,5))
+    plt.title('Time Series Of Differences')
     plt.show()
 
 def correlate_data():
@@ -53,5 +65,7 @@ def correlate_data():
 if __name__ == '__main__':
     if sys.argv[1] == '-g':
         show_hist(sys.argv[2])
+    elif sys.argv[1] == '-t':
+        show_diff_timeseries(sys.argv[2])
     else:
         correlate_data()

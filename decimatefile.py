@@ -1,6 +1,7 @@
 import sys
 import sv_recorded_process
 import numpy as np
+import time
 
 _debug = False
 
@@ -20,6 +21,7 @@ def main():
         readfile = sv_recorded_process.SV71File(sys.argv[1])
     try:
         writefile = open(sys.argv[1][:-4] + '_dec.txt', 'w+')
+        writefile.write('Time,SSP,StDev\n')
     except IOError as e:
         print e
 
@@ -51,6 +53,8 @@ def main():
     if _debug:
         print ('Sec: %i, SV: %0.2f, Std: %0.2f' % (lastsec, 
             np.mean(sv_vals), np.std(sv_vals)))
+        print "Last Record: "
+        sv_record.print_info()
     else:
         writefile.write('{0:d},{1:0.2f},{2:0.2f}'.format(lastsec, 
             np.mean(sv_vals), np.std(sv_vals)))

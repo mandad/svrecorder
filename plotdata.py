@@ -34,12 +34,14 @@ def main():
     time2 = sv_data2['time']
     SSP2 = sv_data2['ssp']
     SSP2 = np.ma.masked_outside(SSP2, 1470, 1485)
-    plt.plot(time1, SSP1)
+    plt.plot(time1, SSP1, label='SV71')
     plt.hold(True)
-    plt.plot(time2, SSP2, 'r')
+    plt.plot(time2, SSP2, 'r', label='Digibar')
     plt.ylim([1470,1485])
     plt.ylabel('Sound Speed (m/s)')
     plt.xlabel('Time (sec since 1/1/1970)')
+    plt.title('Comparison of Sound Speed Sensor Readings')
+    plt.legend()
     plt.show()
 
 if __name__ == '__main__':

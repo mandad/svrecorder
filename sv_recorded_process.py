@@ -37,17 +37,19 @@ class SV71File(SerialFile):
         file.
         """
         if not self.file.closed:
-            line_text = self.file.readline()
-            parts = line_text.split(',')
-            if len(parts) == 3:
-                try:
-                    return SVPInfo(float(parts[1]), float(parts[2]))
-                except:
-                    #Incomplete line that can't be converted to float
+            #Keep trying until a valid line is read or EOF reached
+            while True:
+                line_text = self.file.readline()
+                parts = line_text.split(',')
+                if len(parts) == 3:
+                    try:
+                        return SVPInfo(float(parts[1]), float(parts[2]))
+                    except:
+                        #Incomplete line that can't be converted to float
+                        print "Invalid Record Skipped: " + line_text[:-1]
+                else:
+                    self.file.close()
                     raise StopIteration
-            else:
-                self.file.close()
-                raise StopIteration
         else:
             raise StopIteration
 
@@ -70,17 +72,14 @@ class DigibarFile(SerialFile):
     def next(self):
         if not self.file.closed:
             line_text = self.file.readline()
-            # print line_text.strip()
             parts = line_text.split(',')
             if len(parts) == 5:
                 fulltime = ' '.join(parts[0:2])
                 localtime = time.strptime(fulltime, r'%m/%d/%y %H:%M:%S')
                 epochtime = time.mktime(time.strptime(fulltime, 
                     r'%m/%d/%y %H:%M:%S'))
-                #time set incorrectly
-                epochtime += 3600 * 10
-                #set this to the timezone offset in the file
-                # epochtime += 3600 * 8
+                # if time set incorrectly
+                # epochtime += 3600 * 10
                 # print time.localtime(epochtime)
                 try:
                     return SVPInfo(float(epochtime), float(parts[2]))
