@@ -5,22 +5,22 @@ import time
 
 _debug = False
 
-def main():
+def decimate(filename):
     """Reads an SVP71 record file and outputs one mean value for each second
     along with the stdev for that second.  Writes output to 
     inputfilename_dec.txt
 
-    Command Line Parameter: filename_to_process
-
     Automatically interprets files ending with .log to be digibar recordings
     otherwise, assumed to be SV71 in svrecorder.py output format
     """
-    if sys.argv[1][-3:] == 'log':
-        readfile = sv_recorded_process.DigibarFile(sys.argv[1])
+    print 'Decimating file:' + filename
+
+    if filename[-3:] == 'log':
+        readfile = sv_recorded_process.DigibarFile(filename)
     else:
-        readfile = sv_recorded_process.SV71File(sys.argv[1])
+        readfile = sv_recorded_process.SV71File(filename)
     try:
-        writefile = open(sys.argv[1][:-4] + '_dec.txt', 'w+')
+        writefile = open(filename[:-4] + '_dec.txt', 'w+')
         writefile.write('Time,SSP,StDev\n')
     except IOError as e:
         print e
@@ -60,7 +60,11 @@ def main():
             np.mean(sv_vals), np.std(sv_vals)))
     num_out += 1
     writefile.close()
-    print '%i Records Processed, %i Output' % (num_in, num_out)
+    print '%i Records Processed, %i Output' % (num_in, num_out) 
+    # Return the name of the output file so that other processing can be done
+    return filename[:-4] + '_dec.txt'
 
 if __name__ == '__main__':
-    main()
+    """Command Line Parameter: filename_to_process
+    """
+    decimate(sys.argv[1])
