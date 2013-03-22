@@ -37,7 +37,8 @@ def plot_data(SV70_file, digibar_file):
     plt.plot(time2, SSP2, 'r', label='Digibar')
     plt.ylim([1476,1485])
     plt.ylabel('Sound Speed (m/s)')
-    plt.get_xaxis().set_major_formatter(FormatStrFormatter('%0.0f'))
+    plt.axes().get_yaxis().set_major_formatter(
+        matplotlib.ticker.FormatStrFormatter('%i'))
     plt.xlabel('Time (sec since 1/1/1970)')
     plt.title('Comparison of Sound Speed Sensor Readings')
     plt.legend()
