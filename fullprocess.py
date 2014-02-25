@@ -4,6 +4,8 @@ recorded sound speed files from the SV70 and Digibar.
 
 run with:
 fullprocess.py SV70_file.txt Digibar_file.log output.npz
+to show plots only:
+fullprocess.py -p SV70_file_dec.txt Digibar_file_dec.txt output.npz
 
 Damian Manda
 damian.manda@noaa.gov
@@ -28,7 +30,7 @@ def main():
         show_all_plots(deci_sv70, deci_digibar, sys.argv[3])
 
 if __name__ == '__main__':
-    if len(sys.argv) == 4
+    if len(sys.argv) == 4:
         main()
     elif len(sys.argv) == 5:
         show_all_plots(sys.argv[2], sys.argv[3], sys.argv[4])

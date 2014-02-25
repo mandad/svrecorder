@@ -75,9 +75,13 @@ class DigibarFile(SerialFile):
             parts = line_text.split(',')
             if len(parts) == 5:
                 fulltime = ' '.join(parts[0:2])
-                localtime = time.strptime(fulltime, r'%m/%d/%y %H:%M:%S')
-                epochtime = time.mktime(time.strptime(fulltime, 
-                    r'%m/%d/%y %H:%M:%S'))
+                try:
+                    localtime = time.strptime(fulltime, r'%m/%d/%y %H:%M:%S')
+                    epochtime = time.mktime(time.strptime(fulltime, 
+                        r'%m/%d/%y %H:%M:%S'))
+                except:
+                    #Incomplete line that can't be converted to float
+                    print "Invalid Record Skipped: " + line_text[:-1]
                 # if time set incorrectly
                 # epochtime += 3600 * 10
                 # print time.localtime(epochtime)
